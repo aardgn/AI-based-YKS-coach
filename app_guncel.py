@@ -12,8 +12,13 @@ import google.generativeai as genai
 from PIL import Image
 
 # .env dosyasından anahtarı çek ve Gemini'yi kur
+# Önce Streamlit sunucusuna bak, bulamazsa lokaldeki .env dosyana bak
 load_dotenv()
-api_key = os.environ.get("GEMINI_API_KEY")
+try:
+    api_key = st.secrets["GEMINI_API_KEY"]
+except:
+    api_key = os.environ.get("GEMINI_API_KEY")
+
 if api_key:
     genai.configure(api_key=api_key)
 
