@@ -289,14 +289,50 @@ def main():
                 st.markdown(res)
 
     elif secim == "📊 Deneme Takibi":
-        st.header("📊 Net Kaydı")
-        with st.form("net_form"):
-            t_net = st.number_input("TYT Toplam", step=0.25)
-            a_net = st.number_input("AYT Toplam", step=0.25)
-            if st.form_submit_button("Kaydet"):
-                append_exam_result({"timestamp": datetime.now().isoformat(), "tyt_total": t_net, "ayt_total": a_net})
-                st.success("Kaydedildi!")
+        st.subheader("📊 TYT Netleri")
+        tyt_col1, tyt_col2, tyt_col3, tyt_col4 = st.columns(4)
 
+        with tyt_col1:
+            tyt_turkce = st.number_input("Türkçe (Max 40)", min_value=0.0, max_value=40.0, step=0.25, key="tyt_tr")
+        with tyt_col2:
+            tyt_sosyal = st.number_input("Sosyal (Max 20)", min_value=0.0, max_value=20.0, step=0.25, key="tyt_sos")
+        with tyt_col3:
+            tyt_mat = st.number_input("Matematik (Max 40)", min_value=0.0, max_value=40.0, step=0.25, key="tyt_mat")
+        with tyt_col4:
+            tyt_fen = st.number_input("Fen (Max 20)", min_value=0.0, max_value=20.0, step=0.25, key="tyt_fen")
+
+        # Toplam TYT
+        toplam_tyt = tyt_turkce + tyt_sosyal + tyt_mat + tyt_fen
+
+        st.subheader("📈 AYT Netleri")
+        
+        # AYT Matematik ortak olduğu için sekmelerin dışına alıyoruz
+        ayt_mat = st.number_input("AYT Matematik (Max 40)", min_value=0.0, max_value=40.0, step=0.25, key="ayt_mat")
+        
+        # Sadece Alana Özgü Dersler İçin Sekmeler
+        tab_sayisal, tab_ea = st.tabs(["Sayısal", "Eşit Ağırlık"])
+
+        with tab_sayisal:
+            say_col1, say_col2, say_col3 = st.columns(3)
+            with say_col1:
+                ayt_fizik = st.number_input("Fizik (Max 14)", min_value=0.0, max_value=14.0, step=0.25, key="ayt_fiz")
+            with say_col2:
+                ayt_kimya = st.number_input("Kimya (Max 13)", min_value=0.0, max_value=13.0, step=0.25, key="ayt_kim")
+            with say_col3:
+                ayt_biyo = st.number_input("Biyoloji (Max 13)", min_value=0.0, max_value=13.0, step=0.25, key="ayt_biyo")
+
+        with tab_ea:
+            ea_col1, ea_col2, ea_col3 = st.columns(3)
+            with ea_col1:
+                ayt_edebiyat = st.number_input("Edebiyat (Max 24)", min_value=0.0, max_value=24.0, step=0.25, key="ayt_edeb")
+            with ea_col2:
+                ayt_tarih1 = st.number_input("Tarih-1 (Max 10)", min_value=0.0, max_value=10.0, step=0.25, key="ayt_tar1")
+            with ea_col3:
+                ayt_cog1 = st.number_input("Coğrafya-1 (Max 6)", min_value=0.0, max_value=6.0, step=0.25, key="ayt_cog1")
+
+        # Hesaplamalar
+        toplam_sayisal_ayt = ayt_mat + ayt_fizik + ayt_kimya + ayt_biyo
+        toplam_ea_ayt = ayt_mat + ayt_edebiyat + ayt_tarih1 + ayt_cog1
     elif secim == "📈 Analiz":
         st.header("📈 Haftalık Gelişim")
         an = get_weekly_wrong_analysis()
