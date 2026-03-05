@@ -261,8 +261,21 @@ def main():
         else:
             if not st.session_state.schedule:
                 if st.button("🚀 Programımı Oluştur", type="primary"):
-                    ans = st.session_state.answers
-                    closest = find_closest_profiles(df, ans["tyt_net"], ans["ayt_net"], ans["saat_sayisi"], "pratik")
+                    # Orijinal cevapları bozmamak için bir kopyasını alıyoruz
+                    ans = st.session_state.answers.copy()
+                    
+                    # Deneme Takibi sayfasındaki detaylı verileri çekiyoruz
+                    tyt_detay = f"Türkçe: {st.session_state.get('tyt_tr', 0)}, Sosyal: {st.session_state.get('tyt_sos', 0)}, Mat: {st.session_state.get('tyt_mat', 0)}, Fen: {st.session_state.get('tyt_fen', 0)}"
+                    ayt_say_detay = f"Mat: {st.session_state.get('ayt_mat', 0)}, Fizik: {st.session_state.get('ayt_fiz', 0)}, Kimya: {st.session_state.get('ayt_kim', 0)}, Biyo: {st.session_state.get('ayt_biyo', 0)}"
+                    ayt_ea_detay = f"Edebiyat: {st.session_state.get('ayt_edeb', 0)}, Tarih: {st.session_state.get('ayt_tar1', 0)}, Coğ: {st.session_state.get('ayt_cog1', 0)}"
+                    
+                    # Gemini'ye gizli talimatı paketleyip gönderiyoruz
+                    ans["GİZLİ KOÇLUK TALİMATI"] = "Lütfen sadece toplam nete bakma. Aşağıdaki ders bazlı detaylara bak, düşük olan dersin temel konularına programda ekstra ağırlık ver."
+                    ans["Öğrencinin Detaylı TYT Dağılımı"] = tyt_detay
+                    ans["Öğrencinin Detaylı AYT Sayısal Dağılımı"] = ayt_say_detay
+                    ans["Öğrencinin Detaylı AYT EA Dağılımı"] = ayt_ea_detay
+
+                    closest = find_closest_profiles(df, ans.get("tyt_net", 0), ans.get("ayt_net", 0), ans.get("saat_sayisi", 0), "pratik")
                     st.session_state.schedule = call_gemini(ans, closest)
                     st.session_state.messages.append({"role": "assistant", "content": st.session_state.schedule})
                     st.rerun()
