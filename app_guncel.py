@@ -117,7 +117,7 @@ def find_closest_profiles(df, user_tyt, user_ayt, user_hours, user_style, top_k=
 # --- PROMPT VE CHAT MANTIĞI ---
 
 def build_prompt(user_info: Dict[str, Any], profiles: List[Dict[str, Any]]) -> str:
-    exam_date = datetime(2025, 6, 21)
+    exam_date = datetime(2026, 6, 20))
     days_left = (exam_date - datetime.now()).days
     kronotip = user_info.get("kronotip", "Gündüzcü")
     
